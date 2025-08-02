@@ -1,56 +1,22 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Random Advice</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 40px;
-      background: #fefefe;
-    }
-    button {
-      padding: 12px 20px;
-      font-size: 18px;
-      border: none;
-      background: #4CAF50;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #advice {
-      margin-top: 30px;
-      font-size: 20px;
-      color: #333;
-    }
-  </style>
-</head>
-<body>
-  <h1>🎲 Dapatkan Advice</h1>
-  <button onclick="showAdvice()">Klik di sini</button>
-  <p id="advice">—</p>
+<script>
+  const adviceList = [
+    "Believe in yourself.",
+    "Take it one step at a time.",
+    "Stay curious.",
+    "Don't fear failure.",
+    "Practice makes perfect.",
+    // dan seterusnya sampai 150
+  ];
 
-  <script>
-    const adviceList = [
-      "Senyum dulu, masalah belakangan 😄",
-      "Kamu cukup, kamu pantas, kamu berharga 💖",
-      "Kalau capek, istirahat. Jangan nyerah.",
-      "Ngopi dulu biar gak salah paham ☕",
-      "Rejeki gak akan ketukar!",
-      "Sabar, semua butuh proses.",
-      "Gagal bukan akhir, itu bagian dari jalan sukses.",
-      "Jangan lupa bahagia, sekecil apa pun harimu.",
-      "Kamu udah hebat banget sejauh ini!",
-      "Tertawalah, walau kadang gajian masih jauh 😅",
-      "Napasin dulu... pelan-pelan juga sampai."
-    ];
-
-    function showAdvice() {
-      const random = Math.floor(Math.random() * adviceList.length);
-      document.getElementById("advice").innerText = adviceList[random];
+  function getAdvice() {
+    const name = document.getElementById("nameInput").value;
+    if (name.trim() === "") {
+      document.getElementById("adviceOutput").innerText = "Tolong masukkan nama dulu.";
+      return;
     }
-  </script>
-</body>
-</html>
+
+    const randomIndex = Math.floor(Math.random() * adviceList.length);
+    const advice = adviceList[randomIndex];
+    document.getElementById("adviceOutput").innerText = `${name}, here's your advice: ${advice}`;
+  }
+</script>
