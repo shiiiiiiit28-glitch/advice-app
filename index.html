@@ -6,204 +6,93 @@
   <title>Advice Generator</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f4f4f4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      margin: 40px auto;
     }
-    h1 {
-      color: #333;
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    input {
+
+    input[type="text"] {
       padding: 10px;
+      width: 80%;
       margin-bottom: 10px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
     }
+
     button {
-      padding: 10px 15px;
       background-color: #007bff;
       color: white;
+      padding: 10px 20px;
       border: none;
-      border-radius: 5px;
-      font-size: 1rem;
       cursor: pointer;
+      border-radius: 5px;
     }
-    #adviceOutput {
+
+    .result, .history {
       margin-top: 20px;
-      font-size: 1.2rem;
-      text-align: center;
-      color: #444;
-      max-width: 500px;
+    }
+
+    .history-entry {
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <h1>🔮 Advice Generator</h1>
-  <input type="text" id="nameInput" placeholder="Masukkan nama kamu..." />
-  <button onclick="getAdvice()">Dapatkan Saran</button>
-  <p id="adviceOutput"></p>
+  <div class="container">
+    <h2>🔮 Advice Generator</h2>
+    <input type="text" id="nameInput" placeholder="Masukkan nama kamu" />
+    <br/>
+    <button onclick="generateAdvice()">Dapatkan Saran</button>
+
+    <div class="result" id="result"></div>
+    <div class="history" id="historyList"></div>
+  </div>
 
   <script>
-    const adviceList = [
-      "Believe in yourself.",
-      "Take it one step at a time.",
-      "Stay curious.",
-      "Don’t fear failure.",
-      "Practice makes perfect.",
-      "Be kind to yourself.",
-      "Celebrate small wins.",
-      "Laughter is good medicine.",
-      "You are enough.",
-      "Progress over perfection.",
-      "Stay humble.",
-      "Every day is a chance.",
-      "Smile more.",
-      "Let it go.",
-      "Drink water.",
-      "You got this.",
-      "Enjoy the moment.",
-      "Trust the timing.",
-      "Keep learning.",
-      "Do your best.",
-      "Breathe deeply.",
-      "Stay grateful.",
-      "Think positive.",
-      "Take a break.",
-      "Happiness is now.",
-      "Don’t compare.",
-      "You’re not alone.",
-      "Mistakes are lessons.",
-      "Love yourself.",
-      "Balance is key.",
-      "Slow is smooth.",
-      "Be present.",
-      "Say no sometimes.",
-      "Rest is productive.",
-      "Your pace is okay.",
-      "Keep trying.",
-      "You’re strong.",
-      "Change is okay.",
-      "Speak kindly.",
+    const advices = [
       "Listen first.",
-      "Own your story.",
-      "You matter.",
-      "Less is more.",
-      "Let it flow.",
-      "Do what you love.",
-      "Laugh out loud.",
-      "Make space to grow.",
-      "Keep it simple.",
-      "Bersyukurlah.",
-      "Bangun pagi itu keren.",
-      "Ngopi boleh, stres jangan.",
-      "Jalan pelan asal sampai.",
-      "Jangan baperan.",
-      "Rebahan boleh, ingat bangun.",
-      "Kamu lucu, tapi hidup serius.",
-      "Tetap waras walau chaos.",
-      "Jangan nyerah hari ini.",
-      "Kalem, semua akan berlalu.",
-      "Senyum bisa jadi solusi.",
-      "Napas dulu. Baru mikir.",
-      "Hidup gak harus buru-buru.",
-      "Kamu udah cukup.",
-      "Jangan overthinking sendirian.",
-      "Hati-hati itu bukan takut.",
-      "Jangan lupa makan.",
-      "Gagal bukan akhir.",
-      "Santai aja.",
-      "Ngantuk itu manusiawi.",
-      "Pikiran tenang, hati senang.",
-      "Yang penting usaha.",
-      "Terkadang diem lebih bijak.",
-      "Hari ini cukup baik kok.",
-      "Kamu keren dalam caramu sendiri.",
-      "Jangan tunda bahagia.",
-      "Maafkan dirimu dulu.",
-      "Self reward jangan dilupakan.",
-      "Jangan keras ke diri sendiri.",
-      "Kamu gak harus sempurna.",
-      "Cintai prosesmu.",
-      "Yang penting terus jalan.",
-      "Istirahat bukan malas.",
-      "Cinta itu dimulai dari diri sendiri.",
-      "Kalau cape, pelan aja.",
-      "Tersenyumlah meski sendiri.",
-      "Hidup itu tentang bertumbuh.",
-      "Boleh nangis, tapi jangan nyerah.",
-      "Kamu hebat bisa sampai sini.",
-      "Kadang diam itu healing.",
-      "Semua butuh waktu.",
-      "Lebih baik lambat daripada berhenti.",
-      "Tenang, kamu ga sendirian.",
-      "Kamu boleh salah.",
-      "Percaya prosesnya.",
-      "Satu langkah lebih baik dari diam.",
-      "Mimpi itu gratis, wujudkan bayarannya.",
-      "Hargai tiap detik.",
-      "Nafas itu berkah.",
-      "Bangga dengan kemajuan kecil.",
-      "Semangatmu menular.",
-      "Kamu penting.",
-      "Terima dirimu apa adanya.",
-      "Semua orang punya waktunya.",
-      "Hidup itu naik turun.",
-      "Luka pun bisa sembuh.",
-      "Cintai tubuhmu.",
-      "Jangan menekan diri sendiri.",
-      "Hargai dirimu sendiri.",
-      "Kamu pantas bahagia.",
-      "Ubah pikiran, ubah hidup.",
-      "Fokus pada hal yang bisa dikontrol.",
-      "Jangan bandingkan hidupmu.",
-      "Kamu boleh istirahat.",
-      "Tidak semua harus sempurna.",
-      "Dirimu layak disayangi.",
-      "Kamu gak sendirian dalam ini.",
-      "Dengarkan tubuhmu.",
-      "Terus terang pada dirimu.",
-      "Kamu berharga.",
-      "Cukup adalah cukup.",
-      "Keberhasilanmu berbeda.",
-      "Jangan biarkan orang lain mendikte hidupmu.",
-      "Peluk dirimu hari ini.",
-      "Kebaikan kecil tetaplah kebaikan.",
-      "Hari ini juga penting.",
-      "Kamu sedang belajar, itu hebat.",
-      "Kamu tidak gagal, kamu mencoba.",
-      "Tidak apa-apa merasa lelah.",
-      "Memaafkan itu melegakan.",
-      "Satu hari dalam satu waktu.",
-      "Kamu tidak sendiri.",
-      "Self love adalah proses.",
-      "Kamu layak didengar.",
-      "Bernafas juga pencapaian.",
-      "Merasa cukup adalah kekuatan.",
-      "Jadilah teman terbaik untuk dirimu.",
-      "Ada keindahan dalam ketidaksempurnaan.",
-      "Cintai setiap versimu.",
-      "Pelan tapi pasti.",
-      "Jangan menyerah untuk dirimu sendiri."
+      "Stay consistent.",
+      "Be kind, always.",
+      "Take small steps.",
+      "Trust your process.",
+      "Keep learning.",
+      "Less talk, more action.",
+      "Don't overthink it.",
+      "Gratitude changes things.",
+      "Say no when needed."
     ];
 
-    function getAdvice() {
-      const name = document.getElementById("nameInput").value;
-      const output = document.getElementById("adviceOutput");
+    const history = [];
 
-      if (!name.trim()) {
-        output.innerText = "Tolong masukkan nama kamu dulu.";
-        return;
-      }
+    function generateAdvice() {
+      const name = document.getElementById("nameInput").value.trim();
+      if (name === "") return;
 
-      const randomIndex = Math.floor(Math.random() * adviceList.length);
-      const advice = adviceList[randomIndex];
-      output.innerText = `${name}, ini untuk kamu:\n\n"${advice}"`;
+      const randomAdvice = advices[Math.floor(Math.random() * advices.length)];
+      const fullAdvice = `${name}, ini untuk kamu:<br><strong>"${randomAdvice}"</strong>`;
+
+      // Tampilkan hasil terbaru di atas
+      document.getElementById("result").innerHTML = fullAdvice;
+
+      // Simpan ke history (maksimal 3)
+      history.unshift(`${name}: "${randomAdvice}"`);
+      if (history.length > 3) history.pop();
+
+      // Render history di bawah tombol
+      const historyHTML = history
+        .map(entry => `<div class="history-entry">${entry}</div>`)
+        .join("");
+      document.getElementById("historyList").innerHTML = historyHTML;
     }
   </script>
 </body>
